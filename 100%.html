@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Apex Capital | Institutional Wealth Management</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{--bg:#000;--surface:#111;--surface-2:#161616;--surface-3:#1c1c1c;--border:#242424;--border-2:#2e2e2e;--gold:#d4af37;--gold-2:#f0c75e;--emerald:#10b981;--emerald-2:#34d399;--danger:#ef4444;--text:#fff;--text-dim:#8a8a8a;--text-mid:#b8b8b8;}
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-tap-highlight-color:transparent;}
+html,body{background:var(--bg);color:var(--text);overflow-x:hidden;scroll-behavior:smooth;}
+body{min-height:100vh;position:relative;}
+body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 0%,rgba(212,175,55,0.08),transparent 60%),radial-gradient(ellipse 50% 40% at 80% 100%,rgba(16,185,129,0.06),transparent 60%);pointer-events:none;z-index:0;}
+.page,.market-ticker,.live-banner,.ai-float,.bottom-nav,#global-loader,#custom-modal{position:relative;z-index:1;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes slideUpFade{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes floatY{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(212,175,55,0.15);}50%{box-shadow:0 0 40px rgba(212,175,55,0.4);}}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes marquee{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.94);}to{opacity:1;transform:scale(1);}}
+@keyframes countGlow{0%,100%{text-shadow:0 0 20px rgba(212,175,55,0.4);}50%{text-shadow:0 0 40px rgba(212,175,55,0.8);}}
+@keyframes shimmer{0%{background-position:-500px 0;}100%{background-position:500px 0;}}
+@keyframes pulseRing{0%{box-shadow:0 0 0 0 rgba(212,175,55,0.4);}70%{box-shadow:0 0 0 15px rgba(212,175,55,0);}100%{box-shadow:0 0 0 0 rgba(212,175,55,0);}}
+#global-loader{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);backdrop-filter:blur(14px);z-index:99999;flex-direction:column;align-items:center;justify-content:center;}
+.spinner{width:46px;height:46px;border:3px solid #222;border-top:3px solid var(--gold);border-radius:50%;animation:spin 0.7s linear infinite;}
+.loader-text{margin-top:14px;font-weight:900;font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:2px;}
+.page{display:none;min-height:100vh;padding-bottom:110px;}
+.page.active-page{display:block;animation:slideUpFade 0.5s cubic-bezier(0.16,1,0.3,1) forwards;}
+.page.no-pad{padding-bottom:0;}
+#page-landing{background:var(--bg);}
+.landing-hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 22px 30px;text-align:center;position:relative;overflow:hidden;}
+.landing-hero::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 30%,rgba(212,175,55,0.10),transparent 55%);pointer-events:none;}
+.landing-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(212,175,55,0.10);border:1px solid rgba(212,175,55,0.3);color:var(--gold-2);font-size:10px;font-weight:800;padding:7px 14px;border-radius:30px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:26px;}
+.landing-badge .dot{width:6px;height:6px;background:var(--emerald-2);border-radius:50%;box-shadow:0 0 10px var(--emerald-2);animation:pulseRing 1.8s ease infinite;}
+.landing-logo{font-size:52px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:14px;}
+.landing-logo span{background:linear-gradient(135deg,var(--gold),var(--gold-2),var(--gold));background-size:200% 200%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 3s linear infinite;}
+.landing-tag{font-size:13px;color:var(--text-dim);font-weight:600;line-height:1.6;max-width:320px;margin-bottom:32px;}
+.landing-stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:36px;}
+.l-stat{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px 16px;min-width:100px;}
+.l-stat .v{font-size:19px;font-weight:900;color:var(--gold);}
+.l-stat .k{font-size:9px;color:var(--text-dim);font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-top:3px;}
+.landing-cta{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px;}
+.landing-chart{width:100%;max-width:340px;height:60px;margin-bottom:24px;}
+.landing-foot{margin-top:30px;font-size:10px;color:var(--text-dim);font-weight:600;}
+.landing-foot span{color:var(--gold-2);font-weight:900;}
+.market-ticker{background:#000;color:#fff;font-size:11px;padding:9px 0;display:flex;white-space:nowrap;overflow:hidden;font-weight:600;border-bottom:1px solid var(--border);}
+.ticker-track{display:inline-block;white-space:nowrap;animation:ticker 28s linear infinite;}
+.ticker-track span{margin-right:32px;}
+.ticker-up{color:var(--emerald-2);font-weight:800;}
+.ticker-down{color:#ff5c5c;font-weight:800;}
+.live-banner{background:linear-gradient(90deg,#0d0d0d,#1a1a1a);color:var(--gold-2);font-size:11px;font-weight:700;padding:8px 0;text-align:center;overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--border);}
+.live-banner-track{display:inline-block;white-space:nowrap;animation:marquee 24s linear infinite;}
+.navbar{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(10,10,10,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:50;}
+.logo{font-size:17px;font-weight:900;color:var(--text);}
+.logo span{color:var(--gold);}
+.wallet-pill{background:rgba(212,175,55,0.10);border:1px solid rgba(212,175,55,0.3);color:var(--gold-2);padding:6px 14px;border-radius:20px;font-weight:900;font-size:11px;}
+.auth-container{padding:34px 20px;max-width:440px;margin:0 auto;}
+.auth-card{background:var(--surface);border:1px solid var(--border);border-radius:24px;padding:30px 24px;box-shadow:0 30px 60px rgba(0,0,0,0.6);animation:scaleIn 0.6s cubic-bezier(0.16,1,0.3,1) both;}
+.auth-emblem{width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,rgba(212,175,55,0.15),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;}
+.auth-title{font-size:23px;font-weight:900;color:var(--text);margin-bottom:6px;text-align:center;}
+.auth-sub{font-size:11px;color:var(--text-dim);text-align:center;margin-bottom:24px;font-weight:600;text-transform:uppercase;}
+.field{margin-bottom:16px;text-align:left;position:relative;}
+.field label{display:block;font-size:10px;color:var(--text-dim);margin-bottom:7px;font-weight:800;text-transform:uppercase;letter-spacing:1px;}
+.field input,.field select,.field textarea{width:100%;padding:14px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;color:var(--text);font-size:13px;outline:none;font-weight:600;transition:all 0.3s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(212,175,55,0.12);background:var(--surface-3);}
+.field input::placeholder{color:#4a4a4a;font-weight:500;}
+.pass-wrap{position:relative;}
+.pass-wrap input{padding-right:48px;}
+.eye-btn{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-dim);font-size:18px;cursor:pointer;padding:6px;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;}
+.eye-btn:hover{color:var(--gold-2);background:rgba(212,175,55,0.1);}
+.btn-main{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#0a0a0a;border:none;padding:15px;border-radius:14px;font-weight:900;font-size:13px;cursor:pointer;letter-spacing:0.5px;text-transform:uppercase;box-shadow:0 10px 30px rgba(212,175,55,0.25);transition:all 0.3s;width:100%;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(212,175,55,0.4);}
+.btn-ghost{background:transparent;border:1px solid var(--border-2);color:var(--text);padding:15px;border-radius:14px;font-weight:800;font-size:13px;cursor:pointer;text-transform:uppercase;transition:all 0.3s;width:100%;}
+.btn-ghost:hover{border-color:var(--gold);color:var(--gold-2);}
+.switch-txt{text-align:center;margin-top:18px;font-size:12px;color:var(--text-dim);cursor:pointer;font-weight:700;}
+.switch-txt span{color:var(--gold-2);font-weight:900;}
+.balance-card{background:linear-gradient(135deg,#0d0d0d 0%,#1a1a1a 50%,#0d0d0d 100%);border:1px solid rgba(212,175,55,0.18);border-radius:24px;padding:26px;margin:16px 14px;position:relative;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.5);}
+.balance-card::before{content:"";position:absolute;top:-50%;right:-30%;width:240px;height:240px;background:radial-gradient(circle,rgba(212,175,55,0.15),transparent 70%);border-radius:50%;}
+.balance-card::after{content:"";position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.bal-label{font-size:10px;font-weight:900;text-transform:uppercase;color:var(--text-dim);letter-spacing:1.5px;}
+.bal-amt{font-size:34px;font-weight:900;margin:10px 0 18px;letter-spacing:-1px;background:linear-gradient(135deg,#fff,var(--gold-2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;}
+.bal-actions{display:flex;gap:10px;position:relative;z-index:2;}
+.bal-actions .btn-main{flex:1;padding:13px;font-size:11px;}
+.bal-actions .btn-ghost{flex:1;padding:13px;font-size:11px;}
+.sec-title{padding:14px 18px 8px;font-size:15px;font-weight:900;color:var(--text);display:flex;justify-content:space-between;align-items:center;}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px;}
+.plan-card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:16px;position:relative;box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+.plan-card:hover{border-color:rgba(212,175,55,0.5);transform:translateY(-5px);transition:all 0.4s;}
+.tag-badge{position:absolute;top:0;right:0;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;font-size:8px;font-weight:900;padding:6px 11px;border-bottom-left-radius:12px;border-top-right-radius:18px;text-transform:uppercase;}
+.p-inv{font-size:10px;color:var(--text-dim);font-weight:900;text-transform:uppercase;letter-spacing:0.8px;}
+.p-ret{font-size:21px;font-weight:900;color:var(--gold-2);margin:6px 0;}
+.p-time{font-size:9px;color:var(--emerald-2);font-weight:800;background:rgba(16,185,129,0.10);padding:4px 9px;border-radius:8px;display:inline-block;border:1px solid rgba(16,185,129,0.2);}
+.btn-invest{width:100%;margin-top:12px;background:var(--surface-2);border:1px solid var(--border-2);color:var(--text);padding:11px;border-radius:12px;font-weight:900;font-size:11px;cursor:pointer;text-transform:uppercase;transition:all 0.3s;}
+.btn-invest:hover{background:var(--gold);color:#000;border-color:var(--gold);}
+.chart-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:16px;margin:14px;}
+.chart-header{font-size:13px;font-weight:900;color:var(--text);margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;}
+.calc-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;margin:14px;}
+.calc-title{font-size:15px;font-weight:900;color:var(--text);margin-bottom:6px;}
+.calc-sub{font-size:11px;color:var(--text-dim);font-weight:600;margin-bottom:16px;}
+.calc-result{background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.25);border-radius:14px;padding:16px;text-align:center;margin-top:16px;}
+.calc-res-label{font-size:10px;font-weight:900;text-transform:uppercase;color:var(--emerald-2);}
+.calc-res-val{font-size:26px;font-weight:900;color:var(--emerald-2);margin-top:4px;}
+.community-card{background:linear-gradient(135deg,#0d0d0d,#1a1a1a);border:1px solid rgba(212,175,55,0.2);border-radius:22px;padding:24px;margin:14px;text-align:center;}
+.community-title{font-size:16px;font-weight:900;color:var(--gold-2);margin-bottom:8px;}
+.community-sub{font-size:11px;color:var(--text-mid);margin-bottom:18px;line-height:1.6;}
+.community-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+.audit-badge-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px;}
+.audit-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px;text-align:center;}
+.audit-icon{font-size:24px;margin-bottom:6px;}
+.audit-title{font-size:11px;font-weight:900;color:var(--gold-2);margin-bottom:3px;text-transform:uppercase;}
+.audit-desc{font-size:9px;color:var(--text-dim);font-weight:600;line-height:1.4;}
+.security-footer{text-align:center;padding:14px 18px 24px;font-size:10px;color:var(--text-dim);font-weight:700;line-height:1.7;}
+.security-footer span{color:var(--gold-2);font-weight:900;}
+.page-header{display:flex;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border);gap:12px;background:rgba(10,10,10,0.92);position:sticky;top:0;z-index:40;}
+.back-btn{background:none;border:none;color:var(--gold-2);font-size:20px;cursor:pointer;padding:4px 8px;}
+.screen-box{text-align:center;padding:18px;max-width:460px;margin:0 auto;}
+.gateway-grid-8{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.gw8-card{background:#fff;border-radius:12px;padding:12px 6px 10px;text-align:center;cursor:pointer;position:relative;transition:all 0.3s;border:2px solid transparent;}
+.gw8-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,0.4);}
+.gw8-card.active{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,0.3);}
+.gw8-card .gw8-badge{position:absolute;top:-6px;right:-6px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:8px;font-weight:900;padding:2px 6px;border-radius:6px;}
+.gw8-card .gw8-icon{font-size:26px;margin-bottom:4px;display:block;height:30px;line-height:30px;}
+.gw8-card .gw8-name{font-size:9px;font-weight:800;color:#1a1a1a;line-height:1.1;}
+.gw8-card.active .gw8-name{color:#000;}
+.gw8-card .gw8-check{position:absolute;top:4px;left:4px;width:16px;height:16px;border-radius:50%;background:var(--gold);color:#000;font-size:10px;font-weight:900;display:none;align-items:center;justify-content:center;}
+.gw8-card.active .gw8-check{display:flex;}
+
+/* LOOK 1 */
+#page-payment.look-1{background:#f5f3f7;color:#1a1a1a;padding-bottom:0;}
+#page-payment.look-1.active-page{display:flex;flex-direction:column;min-height:100vh;}
+.look-1 .pay-header{background:#fff;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:40;}
+.look-1 .pay-header .back-btn{color:#1a1a1a;font-size:22px;}
+.look-1 .pay-header .pay-title{font-size:17px;font-weight:800;color:#1a1a1a;flex:1;text-align:center;}
+.look-1 .pay-header .cs-btn{background:#a855f7;color:#fff;border:none;font-size:11px;font-weight:800;padding:7px 14px;border-radius:16px;}
+.look-1 .pay-body{flex:1;padding:18px 14px;overflow-y:auto;padding-bottom:120px;max-width:480px;margin:0 auto;width:100%;}
+.look-1 .pay-amount-card{background:#fff;border-radius:14px;padding:16px;margin-bottom:14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 10px rgba(0,0,0,0.05);}
+.look-1 .pay-amount-val{font-size:24px;font-weight:900;color:#1a1a1a;display:flex;align-items:center;gap:8px;}
+.look-1 .pay-amount-val .copy-ic{font-size:16px;color:#666;cursor:pointer;}
+.look-1 .pay-discount-badge{background:#ffe5e5;color:#ef4444;font-size:10px;font-weight:800;padding:4px 10px;border-radius:12px;}
+.look-1 .pay-timer-top{margin-left:auto;font-size:15px;font-weight:900;color:#ef4444;}
+.look-1 .pay-qr-card{background:#fff;border-radius:14px;padding:20px 16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);}
+.look-1 .pay-qr-wrap{padding:6px;display:inline-block;margin-bottom:14px;}
+.look-1 .pay-qr-wrap img{width:220px;height:220px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;}
+.look-1 .pay-app-btn{padding:14px 18px;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;text-align:left;background:#fff;display:flex;align-items:center;transition:all 0.2s;width:100%;}
+.look-1 .pay-app-btn.phonepe{border:2px solid #5f259f;color:#5f259f;margin-bottom:10px;}
+.look-1 .pay-app-btn.paytm{border:2px solid #00baf2;color:#00baf2;}
+.look-1 .pay-app-btn .arrow{margin-left:auto;font-weight:900;}
+.look-1 .pay-field-label{font-size:13px;font-weight:800;color:#1a1a1a;margin-bottom:8px;margin-top:18px;text-align:left;}
+.look-1 .pay-upi-box{display:flex;background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:18px;box-shadow:0 2px 8px rgba(0,0,0,0.04);}
+.look-1 .pay-upi-box input{flex:1;border:none;outline:none;padding:14px 16px;font-size:15px;color:#1a1a1a;font-weight:600;background:transparent;font-family:monospace;}
+.look-1 .pay-upi-copy-btn{background:#7c3aed;color:#fff;border:none;padding:14px 24px;font-size:14px;font-weight:800;}
+.look-1 .pay-utr-input{width:100%;padding:14px 16px;background:#fff;border:1px solid #d1d5db;border-radius:10px;font-size:15px;color:#1a1a1a;font-weight:600;outline:none;margin-bottom:18px;}
+.look-1 .pay-submit-btn{width:100%;background:#cbd5e1;color:#fff;border:none;border-radius:10px;padding:16px;font-weight:900;font-size:15px;text-transform:uppercase;margin-bottom:18px;}
+.look-1 .pay-submit-btn.enabled{background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 8px 25px rgba(124,58,237,0.35);}
+.look-1 .pay-footer{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:14px 16px;border-top:1px solid #e5e7eb;display:flex;gap:10px;z-index:40;}
+.look-1 .pay-footer .cancel-pay-btn{flex:0 0 30%;background:#f1f5f9;color:#1a1a1a;border:none;border-radius:10px;padding:14px;font-weight:800;font-size:13px;}
+.look-1 .pay-footer .submit-pay-btn{flex:1;background:#cbd5e1;color:#fff;border:none;border-radius:10px;padding:14px;font-weight:800;font-size:13px;}
+.look-1 .pay-footer .submit-pay-btn.enabled{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+
+/* LOOK 2 */
+#page-payment.look-2{background:#fff;color:#1a1a1a;padding-bottom:0;font-family:Georgia,'Times New Roman',serif;}
+#page-payment.look-2.active-page{display:flex;flex-direction:column;min-height:100vh;}
+.look-2 .pay-header{background:#3a5ddc;display:flex;align-items:center;justify-content:space-between;padding:16px 18px;color:#fff;position:sticky;top:0;z-index:40;}
+.look-2 .pay-header .back-btn{color:#fff;font-size:22px;}
+.look-2 .pay-header .pay-title{font-size:20px;color:#fff;flex:1;text-align:center;font-family:Georgia;}
+.look-2 .pay-header .pay-timer-header{font-size:18px;color:#fff;font-family:Georgia;}
+.look-2 .pay-body{flex:1;padding:20px 16px 40px;overflow-y:auto;max-width:480px;margin:0 auto;width:100%;text-align:center;}
+.look-2 .amount-label{font-size:17px;color:#1a1a1a;font-weight:700;margin-bottom:8px;font-family:Georgia;}
+.look-2 .amount-big{font-size:38px;font-weight:900;color:#1a3db5;margin-bottom:14px;font-family:Georgia;letter-spacing:-1px;}
+.look-2 .fill-instruction{font-size:15px;color:#1a1a1a;margin-bottom:6px;font-family:Georgia;}
+.look-2 .scan-instruction{font-size:15px;color:#1a1a1a;margin-bottom:18px;font-family:Georgia;}
+.look-2 .qr-box{background:#fff;border:1px solid #e5e7eb;border-radius:8px;padding:12px;display:inline-block;margin-bottom:14px;}
+.look-2 .qr-box img{width:200px;height:200px;display:block;}
+.look-2 .qr-warning{font-size:14px;color:#d32323;font-weight:700;margin-bottom:14px;font-family:Georgia;text-align:center;}
+.look-2 .save-btn{background:#4285f4;color:#fff;border:none;padding:12px 40px;font-size:16px;font-weight:700;border-radius:8px;margin-bottom:22px;font-family:Georgia;}
+.look-2 .upi-show-box{background:#fafbfc;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;text-align:left;}
+.look-2 .upi-show-box .lbl{font-size:12px;font-weight:800;color:#666;font-family:Georgia;}
+.look-2 .upi-show-box .val{flex:1;font-size:14px;font-weight:800;color:#1a1a1a;font-family:monospace;word-break:break-all;}
+.look-2 .upi-copy-mini{background:#3a5ddc;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:12px;font-weight:800;font-family:Georgia;}
+.look-2 .section-box{background:#fafbfc;border:1px solid #e5e7eb;border-radius:14px;padding:18px 16px;text-align:left;margin-bottom:20px;}
+.look-2 .section-title{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:14px;font-family:Georgia;}
+.look-2 .method-row{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:14px;margin-bottom:10px;cursor:pointer;}
+.look-2 .method-row:hover{background:#f0f4ff;border-color:#4285f4;}
+.look-2 .method-icon{width:44px;height:44px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:1px solid #e5e7eb;}
+.look-2 .method-name{flex:1;font-size:19px;font-weight:800;color:#1a1a1a;font-family:Georgia;}
+.look-2 .method-hand{font-size:22px;color:#4285f4;}
+.look-2 .paid-label{font-size:19px;font-weight:800;color:#1a1a1a;margin-bottom:12px;font-family:Georgia;display:flex;align-items:center;gap:8px;}
+.look-2 .paid-label .guide{font-size:14px;color:#4285f4;text-decoration:none;font-family:Georgia;}
+.look-2 .utr-input-wrap{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d1d5db;border-radius:10px;padding:14px 16px;margin-bottom:18px;}
+.look-2 .utr-icon{font-size:22px;}
+.look-2 .utr-req{color:#d32323;font-size:20px;font-weight:900;font-family:Georgia;}
+.look-2 .utr-label{font-size:17px;font-weight:800;font-family:Georgia;}
+.look-2 .utr-input{flex:1;border:none;outline:none;font-size:15px;font-family:sans-serif;font-weight:500;}
+.look-2 .submit-utr-btn{width:100%;background:#3a5ddc;color:#fff;border:none;border-radius:10px;padding:18px;font-size:19px;font-weight:800;font-family:Georgia;box-shadow:0 4px 14px rgba(58,93,220,0.3);margin-bottom:18px;}
+.look-2 .submit-utr-btn.enabled{background:linear-gradient(135deg,#3a5ddc,#5a78ff);}
+.look-2 .secure-badge{display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;color:#4b5563;font-family:Georgia;font-weight:600;padding:8px 0;}
+.look-2 .secure-badge .shield{color:#10b981;font-size:18px;}
+
+/* LOOK 3 */
+#page-payment.look-3{background:#0f0b1e;color:#fff;padding-bottom:0;}
+#page-payment.look-3.active-page{display:flex;flex-direction:column;min-height:100vh;}
+.look-3 .pay-header{background:linear-gradient(135deg,#7c3aed,#a855f7);display:flex;align-items:center;justify-content:space-between;padding:14px 16px;color:#fff;position:sticky;top:0;z-index:40;}
+.look-3 .pay-header .back-btn{color:#fff;font-size:22px;}
+.look-3 .pay-header .pay-title{font-size:17px;font-weight:800;flex:1;text-align:center;}
+.look-3 .pay-header .pay-timer-header{font-size:14px;font-weight:800;background:rgba(255,255,255,0.2);padding:6px 12px;border-radius:20px;}
+.look-3 .pay-body{flex:1;padding:18px 14px;overflow-y:auto;padding-bottom:130px;max-width:480px;margin:0 auto;width:100%;}
+.look-3 .pay-amount-card{background:linear-gradient(135deg,rgba(255,255,255,0.08),rgba(255,255,255,0.02));border:1px solid rgba(168,85,247,0.3);border-radius:16px;padding:20px;margin-bottom:16px;text-align:center;}
+.look-3 .pay-amount-card .lbl{font-size:12px;color:#a78bfa;text-transform:uppercase;letter-spacing:2px;font-weight:800;}
+.look-3 .pay-amount-card .amt{font-size:38px;font-weight:900;color:#fff;margin-top:6px;letter-spacing:-1px;text-shadow:0 0 30px rgba(168,85,247,0.5);}
+.look-3 .pay-qr-card{background:#1a1033;border:1px solid rgba(168,85,247,0.3);border-radius:16px;padding:20px;text-align:center;margin-bottom:16px;}
+.look-3 .pay-qr-card .wrap{padding:8px;display:inline-block;margin-bottom:14px;background:#fff;border-radius:12px;}
+.look-3 .pay-qr-card img{width:220px;height:220px;display:block;border-radius:6px;}
+.look-3 .pay-upi-row{background:rgba(255,255,255,0.05);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;text-align:left;}
+.look-3 .pay-upi-row .lbl{font-size:11px;color:#a78bfa;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:2px;}
+.look-3 .pay-upi-row .val{flex:1;font-size:15px;font-weight:800;color:#fff;font-family:monospace;word-break:break-all;}
+.look-3 .pay-upi-row button{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;padding:10px 16px;border-radius:10px;font-size:12px;font-weight:800;cursor:pointer;}
+.look-3 .pay-methods-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.look-3 .pay-method-tile{background:rgba(255,255,255,0.05);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.2s;}
+.look-3 .pay-method-tile:hover{background:rgba(168,85,247,0.1);border-color:#a855f7;}
+.look-3 .pay-method-tile .ic{font-size:24px;display:block;margin-bottom:4px;}
+.look-3 .pay-method-tile .nm{font-size:12px;font-weight:800;color:#fff;}
+.look-3 .pay-utr-section{background:rgba(255,255,255,0.05);border:1px solid rgba(168,85,247,0.3);border-radius:12px;padding:16px;margin-bottom:16px;}
+.look-3 .pay-utr-section .warn{color:#f87171;font-size:11px;font-weight:800;margin-bottom:10px;}
+.look-3 .pay-utr-section input{width:100%;background:rgba(0,0,0,0.3);border:1px solid rgba(168,85,247,0.4);border-radius:10px;padding:14px 16px;font-size:15px;color:#fff;font-weight:700;outline:none;font-family:monospace;letter-spacing:1px;}
+.look-3 .pay-utr-section input::placeholder{color:#6b7280;font-weight:500;letter-spacing:0;}
+.look-3 .pay-utr-section input:focus{border-color:#a855f7;box-shadow:0 0 0 3px rgba(168,85,247,0.2);}
+.look-3 .pay-footer{position:fixed;bottom:0;left:0;right:0;background:#0f0b1e;border-top:1px solid rgba(168,85,247,0.3);padding:14px 16px;display:flex;gap:10px;z-index:40;}
+.look-3 .pay-footer .cancel-btn{flex:0 0 30%;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:14px;font-weight:800;font-size:13px;}
+.look-3 .pay-footer .submit-btn{flex:1;background:#4b5563;color:#9ca3af;border:none;border-radius:10px;padding:14px;font-weight:900;font-size:14px;text-transform:uppercase;}
+.look-3 .pay-footer .submit-btn.enabled{background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;box-shadow:0 8px 25px rgba(168,85,247,0.4);}
+
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,10,0.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:10px 0;z-index:100;}
+.tab-btn{background:none;border:none;color:var(--text-dim);font-size:10px;font-weight:800;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.tab-btn.active{color:var(--gold-2);transform:translateY(-3px);}
+.tab-btn span.t-icon{font-size:19px;}
+.ai-float{position:fixed;bottom:82px;right:16px;width:52px;height:52px;background:linear-gradient(135deg,var(--gold),var(--gold-2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;color:#000;z-index:1000;cursor:pointer;box-shadow:0 12px 30px rgba(212,175,55,0.4);}
+.chat-wrap{display:flex;flex-direction:column;height:calc(100vh - 120px);padding:16px;}
+.chat-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px;}
+.bubble{max-width:85%;padding:14px 16px;border-radius:16px;font-size:12px;line-height:1.55;font-weight:500;}
+.b-bot{background:var(--surface-2);color:var(--text);align-self:flex-start;border:1px solid var(--border-2);}
+.b-usr{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;align-self:flex-end;font-weight:700;}
+.chat-input-bar{display:flex;gap:8px;padding-top:12px;border-top:1px solid var(--border);}
+.chat-input-bar input{flex:1;padding:13px 16px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:14px;color:var(--text);font-size:13px;outline:none;font-weight:600;}
+.list-wrap{padding:14px;display:flex;flex-direction:column;gap:12px;}
+.list-card{background:var(--surface);border:1px solid var(--border);padding:16px;border-radius:18px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,0.3);}
+.menu-btn{background:var(--surface);border:1px solid var(--border);padding:16px 18px;border-radius:16px;color:var(--text);font-size:13px;font-weight:800;display:flex;justify-content:space-between;align-items:center;cursor:pointer;width:100%;margin-bottom:10px;}
+.menu-btn:hover{border-color:rgba(212,175,55,0.4);background:var(--surface-2);}
+.profile-header-box{background:linear-gradient(135deg,#0d0d0d 0%,#1a1a1a 100%);border-bottom:1px solid rgba(212,175,55,0.2);padding:28px 20px;display:flex;align-items:center;gap:16px;}
+.profile-avatar{width:70px;height:70px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;background:#000;}
+.profile-info{flex:1;}
+.profile-username{font-size:16px;font-weight:900;display:flex;align-items:center;gap:8px;}
+.vip-badge-pill{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;font-size:9px;font-weight:900;padding:3px 9px;border-radius:10px;display:inline-flex;align-items:center;gap:3px;}
+.profile-uid{font-size:11px;opacity:0.8;margin-top:5px;font-weight:700;color:var(--text-mid);}
+#custom-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(14px);z-index:999999;align-items:center;justify-content:center;padding:20px;}
+.modal-box{background:var(--surface);width:100%;max-width:360px;border-radius:24px;padding:26px;text-align:center;border:1px solid rgba(212,175,55,0.25);}
+.modal-title{font-size:19px;font-weight:900;color:var(--gold-2);margin-bottom:12px;}
+.modal-msg{font-size:12px;color:var(--text-mid);margin-bottom:20px;line-height:1.6;}
+.modal-btn{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:#000;border:none;width:100%;padding:14px;border-radius:14px;font-weight:900;font-size:13px;cursor:pointer;text-transform:uppercase;}
+.status-pending{color:#d97706;font-weight:800;}
+.status-success{color:var(--emerald-2);font-weight:800;}
+.status-running{color:var(--emerald-2);font-weight:800;}
+.status-completed{color:var(--gold-2);font-weight:800;}
+.status-processing{color:#3b82f6;font-weight:800;}
+.empty-msg{text-align:center;color:var(--text-dim);padding:40px 20px;font-size:13px;font-weight:600;}
+@media(max-width:380px){.plans-grid{grid-template-columns:1fr;}.audit-badge-grid{grid-template-columns:1fr;}.gateway-grid-8{grid-template-columns:1fr 1fr 1fr;}}
+</style>
+</head>
+<body>
+
+<div id="global-loader"><div class="spinner"></div><div id="loader-text" class="loader-text">Loading...</div></div>
+<div id="custom-modal"><div class="modal-box" id="modal-content-area"></div></div>
+
+<div class="market-ticker"><div class="ticker-track">
+  <span>🟢 BTC/USDT: <strong id="t-btc" class="ticker-up">$64,820.50 (+2.4%)</strong></span>
+  <span>🔵 ETH/USDT: <strong id="t-eth" class="ticker-up">$3,450.80 (+1.8%)</strong></span>
+  <span>📈 S&P 500: <strong class="ticker-up">5,520.10 (+0.6%)</strong></span>
+  <span>💱 EUR/USD: <strong class="ticker-down">1.0872 (-0.1%)</strong></span>
+  <span>🟡 GOLD: <strong id="t-gold" class="ticker-up">$2,415.30 (+0.9%)</strong></span>
+</div></div>
+
+<div class="live-banner"><div class="live-banner-track" id="liveTickerText">🔥 User @rahul_4819 earned ₹590 from Pool #1 &nbsp;|&nbsp; ⚡ User @amit_9281 withdrawn ₹1,250 &nbsp;|&nbsp; 🚀 Apex Institutional Desk Active 24/7</div></div>
+
+<div class="ai-float" onclick="goTo('page-support')">💬</div>
+
+<div class="bottom-nav" id="bottomNav" style="display:none;">
+  <button class="tab-btn active" onclick="goTo('page-home')"><span class="t-icon">⚡</span><span>Home</span></button>
+  <button class="tab-btn" onclick="goTo('page-deposit-history')"><span class="t-icon">📥</span><span>Deposits</span></button>
+  <button class="tab-btn" onclick="goTo('page-withdraw-history')"><span class="t-icon">📤</span><span>Withdrawals</span></button>
+  <button class="tab-btn" onclick="goTo('page-profile')"><span class="t-icon">👤</span><span>Account</span></button>
+</div>
+
+<!-- LANDING -->
+<div id="page-landing" class="page active-page">
+  <div class="landing-hero">
+    <div class="landing-badge"><span class="dot"></span> Institutional Gateway · Live</div>
+    <div class="landing-logo">APEX<span>·</span>CAPITAL</div>
+    <div class="landing-tag">Algorithmic wealth management for the modern investor. Secure up to 12X returns within 10-minute pool deployments.</div>
+    <div class="landing-chart">
+      <svg viewBox="0 0 340 60" preserveAspectRatio="none">
+        <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#d4af37" stop-opacity="0.5"/><stop offset="100%" stop-color="#d4af37" stop-opacity="0"/></linearGradient></defs>
+        <path d="M0,50 L20,44 L40,46 L60,38 L80,40 L100,30 L120,33 L140,24 L160,26 L180,18 L200,22 L220,14 L240,17 L260,10 L280,12 L300,6 L320,9 L340,4" stroke="#d4af37" stroke-width="2" fill="none"/>
+        <path d="M0,50 L20,44 L40,46 L60,38 L80,40 L100,30 L120,33 L140,24 L160,26 L180,18 L200,22 L220,14 L240,17 L260,10 L280,12 L300,6 L320,9 L340,4 L340,60 L0,60 Z" fill="url(#g1)"/>
+      </svg>
+    </div>
+    <div class="landing-stats">
+      <div class="l-stat"><div class="v">₹2.8Cr+</div><div class="k">AUM</div></div>
+      <div class="l-stat"><div class="v">100K+</div><div class="k">Investors</div></div>
+      <div class="l-stat"><div class="v">99.8%</div><div class="k">Audit</div></div>
+    </div>
+    <div class="landing-cta">
+      <button class="btn-main" onclick="goTo('page-signup')">Open Investment Account</button>
+      <button class="btn-ghost" onclick="goTo('page-login')">Sign In to Portal</button>
+    </div>
+    <div class="landing-foot">🔒 Secured by <span>256-Bit SSL</span> · ISO 27001 · PCI-DSS Level 1</div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div id="page-signup" class="page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-emblem">📈</div>
+      <div class="auth-title">Create Account</div>
+      <div class="auth-sub">Institutional Wealth Portal</div>
+      <div class="field"><label>Full Name</label><input type="text" id="reg-name" placeholder="Enter your name"></div>
+      <div class="field"><label>Mobile Number</label><input type="tel" id="reg-phone" placeholder="10-digit mobile" maxlength="10"></div>
+      <div class="field"><label>Email Address</label><input type="email" id="reg-email" placeholder="name@example.com"></div>
+      <div class="field"><label>Password (6+ chars)</label>
+        <div class="pass-wrap"><input type="password" id="reg-pass" placeholder="Create password"><button type="button" class="eye-btn" onclick="togglePassword('reg-pass', this)">👁️</button></div>
+      </div>
+      <button class="btn-main" onclick="handleSignup()">Register Account</button>
+      <div class="switch-txt" onclick="goTo('page-login')">Already have an account? <span>Sign In</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="page-login" class="page">
+  <div class="auth-container" style="margin-top:20px;">
+    <div class="auth-card">
+      <div class="auth-emblem">🛡️</div>
+      <div class="auth-title">Member Sign In</div>
+      <div class="auth-sub">Secure Quantitative Gateway</div>
+      <div class="field"><label>Email or Mobile</label><input type="text" id="login-id" placeholder="Enter email or mobile"></div>
+      <div class="field"><label>Password</label>
+        <div class="pass-wrap"><input type="password" id="login-pass" placeholder="Enter password"><button type="button" class="eye-btn" onclick="togglePassword('login-pass', this)">👁️</button></div>
+      </div>
+      <button class="btn-main" onclick="handleLogin()">Sign In Securely</button>
+      <div class="switch-txt" onclick="goTo('page-signup')">New investor? <span>Open an Account</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- HOME -->
+<div id="page-home" class="page">
+  <div class="navbar"><div class="logo"><span>APEX</span>CAPITAL</div><div class="wallet-pill" id="nav-wallet-bal">₹0.00</div></div>
+  <div class="balance-card">
+    <div class="bal-label">Portfolio Total Valuation</div>
+    <div class="bal-amt" id="home-wallet-bal">₹0.00</div>
+    <div class="bal-actions">
+      <button class="btn-main" onclick="goTo('page-deposit')">+ Deposit</button>
+      <button class="btn-ghost" onclick="handleDirectWithdrawClick()">Withdraw</button>
+    </div>
+  </div>
+  <div class="sec-title"><span>⚡ High-Yield Growth Pools</span><span style="font-size:11px;color:var(--gold-2);">10 Min Lock</span></div>
+  <div class="plans-grid" id="plansContainer"></div>
+  <div class="chart-box">
+    <div class="chart-header"><span>📈 BTC/USDT Live Feed</span><span style="font-size:10px;color:var(--emerald-2);">● Real-Time</span></div>
+    <div class="tradingview-widget-container" style="height:220px;width:100%;">
+      <div class="tradingview-widget-container__widget" style="height:100%;width:100%"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+      {"symbol":"BINANCE:BTCUSDT","width":"100%","colorTheme":"dark","isTransparent":true,"locale":"en"}
+      </script>
+    </div>
+  </div>
+  <div class="calc-box">
+    <div class="calc-title">🧮 Return Estimator</div>
+    <div class="calc-sub">Calculate estimated compounding returns over daily pool deployments.</div>
+    <div class="field"><label>Investment Capital (₹)</label>
+      <select id="calc-amt" onchange="calculateRoi()" style="width:100%;padding:11px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-weight:700;">
+        <option value="59">₹59 (Return: ₹590)</option>
+        <option value="69">₹69 (Return: ₹790)</option>
+        <option value="100" selected>₹100 (Return: ₹1,199)</option>
+        <option value="200">₹200 (Return: ₹2,000)</option>
+      </select>
+    </div>
+    <div class="field" style="margin-top:14px;">
+      <label>Deployments / Day</label>
+      <select id="calc-freq" onchange="calculateRoi()" style="width:100%;padding:11px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-weight:700;">
+        <option value="1">1 Pool / Day</option>
+        <option value="3">3 Pools / Day</option>
+        <option value="5" selected>5 Pools / Day - Max</option>
+      </select>
+    </div>
+    <div class="calc-result"><div class="calc-res-label">Estimated Daily Payout</div><div class="calc-res-val" id="calc-output">₹5,995</div></div>
+  </div>
+  <div class="community-card">
+    <div class="community-title">Join Apex Capital Global Investor Community</div>
+    <div class="community-sub">Connect with thousands of verified institutional investors.</div>
+    <div class="community-btns">
+      <button class="btn-main" style="flex:1;max-width:140px;padding:12px;font-size:11px;" onclick="window.open('https://t.me/Binance','_blank')">💬 Telegram</button>
+      <button class="btn-ghost" style="flex:1;max-width:140px;padding:12px;font-size:11px;" onclick="window.open('https://www.youtube.com','_blank')">📺 YouTube</button>
+    </div>
+  </div>
+  <div class="audit-badge-grid">
+    <div class="audit-card"><div class="audit-icon">🛡️</div><div class="audit-title">CertiK Audited</div><div class="audit-desc">Score 99.8%</div></div>
+    <div class="audit-card"><div class="audit-icon">🌐</div><div class="audit-title">FINTRAC MSB</div><div class="audit-desc">Regulated</div></div>
+    <div class="audit-card"><div class="audit-icon">🔒</div><div class="audit-title">PCI-DSS L1</div><div class="audit-desc">Encrypted</div></div>
+    <div class="audit-card"><div class="audit-icon">⚡</div><div class="audit-title">Tier-1 Liquidity</div><div class="audit-desc">Instant</div></div>
+  </div>
+  <div class="security-footer">🔒 Secured by <span>Cloudflare 256-Bit SSL</span><br>ISO 27001 · PCI-DSS Level 1</div>
+</div>
+
+<!-- DEPOSIT -->
+<div id="page-deposit" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-home')">←</button>
+    <h3 style="font-size:15px;font-weight:800;">Deposit</h3>
+    <div style="margin-left:auto;font-size:11px;color:var(--gold-2);font-weight:800;cursor:pointer;" onclick="goTo('page-deposit-history')">Deposit History</div>
+  </div>
+  <div class="screen-box" style="max-width:460px;">
+    <div style="background:linear-gradient(135deg,#ef4444,#dc2626);border-radius:14px;padding:14px 18px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;color:#fff;">
+      <span style="font-size:12px;font-weight:800;">Select Payment Channel</span>
+      <span style="font-size:16px;font-weight:900;">₹<span id="dep-balance-mini">0.00</span></span>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:18px;text-align:left;margin-bottom:16px;">
+      <label style="font-size:10px;color:var(--text-dim);font-weight:800;margin-bottom:8px;display:block;letter-spacing:1px;text-transform:uppercase;">Deposit Amount (Min ₹59)</label>
+      <input type="number" id="dep-amt" placeholder="e.g. 100" style="width:100%;padding:14px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:12px;font-weight:700;outline:none;color:var(--text);font-size:16px;">
+    </div>
+    <div style="color:var(--gold-2);font-size:13px;font-weight:800;margin:14px 0 10px;">🎁 Select Payment Channel</div>
+    <div class="gateway-grid-8" id="gatewayGrid8"></div>
+    <button class="btn-main" onclick="proceedToPayment()">Deposit</button>
+  </div>
+</div>
+
+<!-- PAYMENT PAGE (3 LOOKS) -->
+<div id="page-payment" class="page no-pad look-1">
+  <!-- LOOK 1 -->
+  <div id="paymentContentLook1" style="display:none;">
+    <div class="pay-header">
+      <button class="back-btn" onclick="cancelPayment()">←</button>
+      <div class="pay-title" id="pay-header-title-l1">ArUpiPay</div>
+      <button class="cs-btn" onclick="goTo('page-support')">Customer Service</button>
+    </div>
+    <div class="pay-body">
+      <div class="pay-amount-card">
+        <div class="pay-amount-val">₹<span id="pay-amt-l1">0.00</span> <span class="copy-ic" onclick="copyAmount()">📋</span></div>
+        <div class="pay-discount-badge">Discount ₹0.80</div>
+        <div class="pay-timer-top" id="pay-timer-l1">15:00</div>
+      </div>
+      <div class="pay-qr-card">
+        <div class="pay-qr-wrap"><div id="pay-qr-container-l1"></div></div>
+        <div style="font-size:13px;font-weight:800;color:#1a1a1a;margin:14px 0;text-align:left;">● Choose a payment method to pay</div>
+        <button class="pay-app-btn phonepe" onclick="openUpiApp('phonepe')"><span>Pay with PhonePe</span><span class="arrow">→</span></button>
+        <button class="pay-app-btn paytm" onclick="openUpiApp('paytm')"><span>Pay with Paytm</span><span class="arrow">→</span></button>
+        <div class="pay-field-label">● UPI ID (VPA)</div>
+        <div class="pay-upi-box">
+          <input type="text" id="pay-upi-l1" readonly value="—">
+          <button class="pay-upi-copy-btn" onclick="copyPayUpi('l1')">COPY</button>
+        </div>
+        <div class="pay-field-label">● Input UTR / Paste UTR</div>
+        <div style="color:#ef4444;font-size:12px;font-weight:800;margin-bottom:10px;text-align:left;">If you do not back fill UTR / paste UTR, 100% will fail.</div>
+        <div style="display:flex;gap:8px;background:#fff;border:2px solid #ef4444;border-radius:24px;padding:4px 4px 4px 16px;margin-bottom:14px;">
+          <input type="text" id="payment-utr-l1" placeholder="Input 12 digits here" maxlength="32" oninput="checkUtrFilledL1()" style="flex:1;border:none;outline:none;font-size:14px;font-weight:700;color:#1a1a1a;background:transparent;padding:10px 0;">
+          <button onclick="pasteUtr('l1')" style="background:#ef4444;color:#fff;border:none;border-radius:20px;padding:10px 18px;font-size:12px;font-weight:800;">Paste</button>
+        </div>
+      </div>
+    </div>
+    <div class="pay-footer">
+      <button class="cancel-pay-btn" onclick="cancelPayment()">Cancel</button>
+      <button class="submit-pay-btn" id="submit-pay-btn-l1" onclick="submitPaymentL1()">Submit (UTR not entered)</button>
+    </div>
+  </div>
+
+  <!-- LOOK 2 -->
+  <div id="paymentContentLook2" style="display:none;">
+    <div class="pay-header">
+      <button class="back-btn" onclick="cancelPayment()">←</button>
+      <div class="pay-title">Payment</div>
+      <div class="pay-timer-header" id="pay-timer-l2">15:00</div>
+    </div>
+    <div class="pay-body">
+      <div class="amount-label">Amount Payable</div>
+      <div class="amount-big">₹<span id="pay-amt-l2">0.00</span></div>
+      <div class="fill-instruction">Please fill in UTR after successful payment</div>
+      <div class="scan-instruction">Use Mobile Scan QR To Pay</div>
+      <div class="qr-box"><div id="pay-qr-container-l2"></div></div>
+      <div class="qr-warning">Do not save QR codes for repeated payments, or the funds may not be credited.</div>
+      <div class="upi-show-box">
+        <div style="flex:1;"><div class="lbl">UPI ID (VPA)</div><div class="val" id="pay-upi-l2">—</div></div>
+        <button class="upi-copy-mini" onclick="copyPayUpi('l2')">COPY</button>
+      </div>
+      <div class="section-box">
+        <div class="section-title">Choose a payment method to pay</div>
+        <div class="method-row" onclick="openUpiApp('paytm')"><div class="method-icon">💳</div><div class="method-name">Paytm</div><div class="method-hand">👆</div></div>
+        <div class="method-row" onclick="openUpiApp('phonepe')"><div class="method-icon">📱</div><div class="method-name">PhonePe</div><div class="method-hand">👆</div></div>
+        <div class="method-row" onclick="openUpiApp('gpay')"><div class="method-icon">🏦</div><div class="method-name">Google Pay</div><div class="method-hand">👆</div></div>
+      </div>
+      <div class="paid-label">Paid? Submit UTR/Ref No</div>
+      <div class="utr-input-wrap">
+        <div class="utr-icon">💳</div><div class="utr-req">*</div><div class="utr-label">UTR</div>
+        <input type="text" id="payment-utr-l2" class="utr-input" placeholder="UTR/UPI Ref No/ UPI Transaction ID" maxlength="32" oninput="checkUtrFilledL2()">
+      </div>
+      <button class="submit-utr-btn" id="submit-pay-btn-l2" onclick="submitPaymentL2()">Submit UTR / Ref No</button>
+      <div class="secure-badge"><span class="shield">🛡️</span> This payment is secured by UPI APP Pay</div>
+    </div>
+  </div>
+
+  <!-- LOOK 3 -->
+  <div id="paymentContentLook3" style="display:none;">
+    <div class="pay-header">
+      <button class="back-btn" onclick="cancelPayment()">←</button>
+      <div class="pay-title" id="pay-header-title-l3">Secure Payment</div>
+      <div class="pay-timer-header" id="pay-timer-l3">15:00</div>
+    </div>
+    <div class="pay-body">
+      <div class="pay-amount-card">
+        <div class="lbl">Amount Payable</div>
+        <div class="amt">₹<span id="pay-amt-l3">0.00</span></div>
+      </div>
+      <div class="pay-qr-card">
+        <div class="wrap"><div id="pay-qr-container-l3"></div></div>
+        <div style="font-size:12px;color:#a78bfa;text-align:center;line-height:1.6;">Scan QR with any UPI app.</div>
+      </div>
+      <div class="pay-upi-row">
+        <div style="flex:1;"><div class="lbl">UPI ID (VPA)</div><div class="val" id="pay-upi-l3">—</div></div>
+        <button onclick="copyPayUpi('l3')">COPY</button>
+      </div>
+      <div style="color:#a78bfa;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin:8px 0 10px;">⚡ Quick Pay Methods</div>
+      <div class="pay-methods-grid">
+        <div class="pay-method-tile" onclick="openUpiApp('phonepe')"><span class="ic">📱</span><div class="nm">PhonePe</div></div>
+        <div class="pay-method-tile" onclick="openUpiApp('paytm')"><span class="ic">💳</span><div class="nm">Paytm</div></div>
+        <div class="pay-method-tile" onclick="openUpiApp('bhim')"><span class="ic">🏦</span><div class="nm">BHIM</div></div>
+        <div class="pay-method-tile" onclick="openUpiApp('gpay')"><span class="ic">🔷</span><div class="nm">Google Pay</div></div>
+      </div>
+      <div class="pay-utr-section">
+        <div class="warn">⚠️ If you do not paste UTR, 100% will fail.</div>
+        <input type="text" id="payment-utr-l3" placeholder="Enter 12-digit UTR / Ref No" maxlength="32" oninput="checkUtrFilledL3()">
+      </div>
+    </div>
+    <div class="pay-footer">
+      <button class="cancel-btn" onclick="cancelPayment()">Cancel</button>
+      <button class="submit-btn" id="submit-pay-btn-l3" onclick="submitPaymentL3()">SUBMIT PAYMENT</button>
+    </div>
+  </div>
+</div>
+
+<!-- WITHDRAW -->
+<div id="page-withdraw" class="page">
+  <div class="page-header"><button class="back-btn" onclick="goTo('page-home')">←</button><h3 style="font-size:15px;font-weight:800;" id="withdrawPageTitle">Withdraw Funds</h3></div>
+  <div class="screen-box" style="text-align:left;">
+    <div style="background:var(--surface);border:1px solid var(--border);padding:22px;border-radius:20px;margin-bottom:16px;">
+      <div class="field"><label>Withdrawal Amount (Min ₹400)</label><input type="number" id="w-amt" placeholder="Enter amount"></div>
+      <div id="active-payout-info" style="font-size:12px;font-weight:800;color:var(--emerald-2);margin:12px 0;background:rgba(16,185,129,0.08);padding:12px;border-radius:12px;"></div>
+      <button class="btn-main" style="margin-top:10px;" onclick="executeWithdrawal()">Confirm & Withdraw</button>
+      <div style="font-size:10px;color:var(--text-dim);text-align:center;margin-top:12px;">⏱️ Payout auto-processes within 2 hours.</div>
+    </div>
+  </div>
+</div>
+
+<!-- DEPOSIT HISTORY -->
+<div id="page-deposit-history" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-home')">←</button>
+    <h3 style="font-size:15px;font-weight:800;">📥 Deposit History</h3>
+  </div>
+  <div class="list-wrap" id="depositHistoryContainer"><div class="empty-msg">No deposit history yet.</div></div>
+</div>
+
+<!-- WITHDRAW HISTORY -->
+<div id="page-withdraw-history" class="page">
+  <div class="page-header">
+    <button class="back-btn" onclick="goTo('page-home')">←</button>
+    <h3 style="font-size:15px;font-weight:800;">📤 Withdraw History</h3>
+  </div>
+  <div class="list-wrap" id="withdrawHistoryContainer"><div class="empty-msg">No withdraw history yet.</div></div>
+</div>
+
+<!-- TRADES -->
+<div id="page-trades" class="page"><div class="page-header"><h3 style="font-size:15px;font-weight:800;">Active Liquidity Pools</h3></div><div class="list-wrap" id="tradesListContainer"><div class="empty-msg">No active trades running.</div></div></div>
+
+<!-- PROFILE -->
+<div id="page-profile" class="page">
+  <div class="profile-header-box">
+    <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" class="profile-avatar">
+    <div class="profile-info"><div class="profile-username" id="profileNameDisplay">MEMBER <span class="vip-badge-pill" id="vipTierBadge">⭐ VIP2</span></div><div class="profile-uid">UID | <span id="profileUidDisplay">19993893</span></div><div class="profile-uid" style="font-size:10px;">Last login: <span id="lastLoginTime">---</span></div></div>
+  </div>
+  <div style="padding:16px;">
+    <button class="menu-btn" onclick="goTo('page-deposit-history')"><span>📥 Deposit History</span><span>→</span></button>
+    <button class="menu-btn" onclick="goTo('page-withdraw-history')"><span>📤 Withdraw History</span><span>→</span></button>
+    <button class="menu-btn" onclick="goTo('page-about')"><span>ℹ️ Account Summary</span><span>→</span></button>
+    <button class="menu-btn" onclick="goTo('page-tickets')"><span>🎫 Support Tickets</span><span>→</span></button>
+    <button class="menu-btn" onclick="shareReferralLink()"><span>🎁 Invite Friends</span><span>→</span></button>
+    <button class="menu-btn" onclick="openNameModal()"><span>✏️ Change Profile Name</span><span>→</span></button>
+    <button class="menu-btn" onclick="openPasswordModal()"><span>🔑 Change Password</span><span>→</span></button>
+    <button class="menu-btn" onclick="goTo('page-bank-details')"><span>🏦 Bank Account</span><span>→</span></button>
+    <button class="menu-btn" onclick="goTo('page-kyc')"><span>🛡️ Complete KYC</span><span id="kyc-badge" style="color:var(--gold-2);font-size:11px;font-weight:900;">Pending</span></button>
+    <button class="menu-btn" style="border-color:rgba(239,68,68,0.3);color:var(--danger);" onclick="logoutUser()"><span>🚪 Logout Portal</span><span>→</span></button>
+  </div>
+</div>
+
+<!-- TICKETS -->
+<div id="page-tickets" class="page"><div class="page-header"><button class="back-btn" onclick="goTo('page-profile')">←</button><h3 style="font-size:15px;font-weight:800;">Support Tickets</h3></div><div class="auth-container" style="padding-top:16px;"><div class="auth-card" style="margin-bottom:18px;"><div class="auth-title" style="font-size:18px;">Raise Dispute Ticket</div><div class="field"><label>Issue Category</label><select id="ticket-category" style="width:100%;padding:13px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-weight:600;"><option>Deposit / UTR Verification</option><option>Withdrawal Processing Delay</option><option>Liquidity Pool Settlement</option><option>KYC Verification Issue</option></select></div><div class="field"><label>12-Digit UTR</label><input type="text" id="ticket-ref" placeholder="e.g. 412938102938" maxlength="12"></div><div class="field"><label>Describe Issue</label><textarea id="ticket-desc" rows="3" placeholder="Provide details..." style="resize:none;"></textarea></div><button class="btn-main" onclick="submitSupportTicket()">Submit Ticket</button></div><div style="font-size:14px;font-weight:900;color:var(--gold-2);margin-bottom:12px;">📋 Your Tickets</div><div class="list-wrap" id="ticketsListContainer" style="padding:0;"><div class="empty-msg">No tickets yet.</div></div></div></div>
+
+<!-- ABOUT -->
+<div id="page-about" class="page"><div class="page-header"><button class="back-btn" onclick="goTo('page-profile')">←</button><h3 style="font-size:15px;font-weight:800;">Account Summary</h3></div><div style="padding:16px;max-width:440px;margin:0 auto;"><div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;margin-bottom:16px;"><div style="font-size:14px;font-weight:900;color:var(--gold-2);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px;">👤 Profile</div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;"><span style="color:var(--text-dim);font-weight:700;">Name:</span><span id="about-name" style="font-weight:900;">---</span></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;"><span style="color:var(--text-dim);font-weight:700;">Mobile:</span><span id="about-phone" style="font-weight:900;">---</span></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;"><span style="color:var(--text-dim);font-weight:700;">Email:</span><span id="about-email" style="font-weight:900;">---</span></div><div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text-dim);font-weight:700;">Last Login:</span><span id="about-logintime" style="font-weight:900;">---</span></div></div><div style="background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:22px;"><div style="font-size:14px;font-weight:900;color:var(--gold-2);margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:10px;">📊 Metrics</div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;"><span style="color:var(--text-dim);font-weight:700;">Total Tx:</span><span id="about-total-tx" style="font-weight:900;">0</span></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;"><span style="color:var(--text-dim);font-weight:700;">Deposited:</span><span id="about-total-dep" style="font-weight:900;color:var(--emerald-2);">₹0</span></div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:10px;"><span style="color:var(--text-dim);font-weight:700;">Withdrawn:</span><span id="about-total-wdr" style="font-weight:900;color:var(--danger);">₹0</span></div><div style="display:flex;justify-content:space-between;font-size:12px;"><span style="color:var(--text-dim);font-weight:700;">Pools:</span><span id="about-total-pools" style="font-weight:900;color:var(--gold-2);">0</span></div></div></div></div>
+
+<!-- BANK -->
+<div id="page-bank-details" class="page"><div class="page-header"><button class="back-btn" onclick="goTo('page-profile')">←</button><h3 style="font-size:15px;font-weight:800;">Bank Account Details</h3></div><div class="auth-container" style="padding-top:16px;"><div class="auth-card"><div class="auth-emblem">🏦</div><div class="auth-title" style="font-size:19px;">Bank Payout Profile</div><div class="field"><label>Account Holder Name</label><input type="text" id="bank-holder-name" placeholder="As per passbook"></div><div class="field"><label>Bank Name</label><select id="bank-name-select" style="width:100%;padding:13px;background:var(--surface-2);border:1px solid var(--border-2);border-radius:10px;color:var(--text);font-weight:600;"><option value="">-- Choose Bank --</option><option>SBI</option><option>HDFC</option><option>ICICI</option><option>Axis</option></select></div><div class="field"><label>Account Number</label><input type="password" id="bank-acc-no" placeholder="Enter account number"></div><div class="field"><label>IFSC Code</label><input type="text" id="bank-ifsc" placeholder="SBIN0001234" style="text-transform:uppercase;"></div><button class="btn-main" onclick="saveBankDetailsSecurely()">Save Bank Profile</button></div></div></div>
+
+<!-- KYC -->
+<div id="page-kyc" class="page"><div class="page-header"><button class="back-btn" onclick="goTo('page-profile')">←</button><h3 style="font-size:15px;font-weight:800;">KYC Verification</h3></div><div class="auth-container" style="padding-top:16px;"><div class="auth-card"><div class="auth-emblem">🛡️</div><div class="auth-title" style="font-size:19px;">Document Verification</div><div class="field"><label>Full Name (as on PAN)</label><input type="text" id="kyc-fullname" placeholder="Enter full name"></div><div class="field"><label>PAN Card Number</label><input type="text" id="kyc-pan" placeholder="ABCDE1234F" style="text-transform:uppercase;" maxlength="10"></div><div class="field"><label>Identity Document Number</label><input type="text" id="kyc-aadhaar" placeholder="Enter ID number" maxlength="12"></div><div class="field"><label>Date of Birth</label><input type="date" id="kyc-dob"></div><button class="btn-main" onclick="triggerBiometricScan()">Submit KYC</button></div></div></div>
+
+<!-- SUPPORT -->
+<div id="page-support" class="page"><div class="page-header"><button class="back-btn" onclick="goTo('page-home')">←</button><h3 style="font-size:14px;font-weight:800;">💬 Apex Support AI</h3></div><div class="chat-wrap"><div class="chat-body" id="chatBody"><div class="bubble b-bot">Hello! I am Apex Support AI. How can I assist you with deposit UTR, liquidity pools, or withdrawals today?</div></div><div class="chat-input-bar"><input type="text" id="chatInput" placeholder="Ask query..." onkeypress="if(event.key==='Enter') sendAiMsg()"><button class="btn-main" style="flex:0 0 80px;" onclick="sendAiMsg()">Send</button></div></div></div>
+
+<script>
+// ============================================================
+// CONFIG
+// ============================================================
+const REAL_UPI_A = 'pathakeartwork49-1@okhdfcbank';
+const REAL_UPI_B = 'pathakeartwork49-1@okhdfcbank';
+
+const PAYMENT_GATEWAYS = [
+  { key:'upiqr',    name:'UPI-QR',     icon:'🏦', realUpi: REAL_UPI_A, look: 1 },
+  { key:'upixqr',   name:'UPI x QR',   icon:'📱', realUpi: REAL_UPI_A, look: 1 },
+  { key:'ewallet',  name:'E-Wallet',   icon:'💳', realUpi: REAL_UPI_A, look: 2 },
+  { key:'edpay',    name:'EDPAY',      icon:'💠', realUpi: REAL_UPI_A, look: 2 },
+  { key:'paytmqr',  name:'Paytm x QR', icon:'💰', realUpi: REAL_UPI_B, look: 2 },
+  { key:'novaxpay', name:'NOVA X PAY', icon:'⚡', realUpi: REAL_UPI_B, look: 3 },
+  { key:'zyrapay',  name:'ZYRA PAY',   icon:'🌟', realUpi: REAL_UPI_B, look: 3 },
+  { key:'arpay',    name:'ARPay',      icon:'💵', realUpi: REAL_UPI_B, look: 3 },
+  { key:'bhimupi',  name:'BHIM UPI',   icon:'🔷', realUpi: REAL_UPI_B, look: 3 }
+];
+
+let selectedGatewayKey = 'upiqr';
+let pendingPayment = null;
+let payTimerInt = null;
+
+const FAKE_UPI_SUFFIXES = ['mbkn','ybl','pyts','ptyes','okaxis','okhdfcbank','okicici','oksbi','paytm','apl','ibl','axl','upi','fam','yesbank','barodampay','cnrb','idfcbank','jkb','kbl','kotak','pnb','sbi','uco','unionbank','vijb','yapl','airtel','freecharge','jio','axisbank','hdfcbank','icici','indus','idbi','rbl','federal','kotakbank','yesbk','dbs','hsbc','sc','citi','amazonpay','slice','fbl','gvsb','tjsb','sib','csb','dcb','karb','nvshq','rmgb','sunrise','tmb','utbi','vijayabank','jsbl'];
+const FAKE_NAMES = ['mohankumar','rahulsharma','amitkumar','vikram','deepak','sandeep','rohit','manish','priya','neha','karan','aakash','pooja','vikas','sunil','ankit','pankaj','ajay','vijay','nikhil','simran','kunal','megha','ritu','sachin','mohit','alok','divya','swati','tarun','naveen','abhishek','gaurav','suresh','ramesh','pawan','vivek','ashish','harish','umesh','yogesh','raj','ravi','sumit','arjun','aryan','rohan','sameer','kabir','ayaan','zara','isha','aarav','vihaan','aditya','krishna','shivam','vinod','mukesh','manoj','pradeep','rakesh','shyam','sanjay','gopal','vinay','harsh','krish','dhruv','yash','kartik','pranav','shaurya','veer','om','rudra','atharv','tanvi','anaya','diya','myra','siya','saanvi','kiara','aadhya','divyanshi','shreya','kavya','sneha','aarti','nisha','rekha','geeta','sita','radha','lakshmi'];
+
+function generateFakeUpi(){
+  const type = Math.random();
+  const suf = FAKE_UPI_SUFFIXES[Math.floor(Math.random() * FAKE_UPI_SUFFIXES.length)];
+  if(type < 0.55){ return String(Math.floor(6000000000 + Math.random() * 4000000000)) + '@' + suf; }
+  else if(type < 0.85){ return FAKE_NAMES[Math.floor(Math.random() * FAKE_NAMES.length)] + '@' + suf; }
+  else { return FAKE_NAMES[Math.floor(Math.random() * FAKE_NAMES.length)] + Math.floor(Math.random()*9999) + '@' + suf; }
+}
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxJb2soKSh8pFk2mSzJYVMTJ5KLKFfSaFBdzI2qgi-_7FaifSFKCdQCyjIzMe2J-dTE/exec";
+const DEPOSIT_AUTO_CREDIT_MS = 10 * 60 * 1000;
+const WITHDRAW_AUTO_SUCCESS_MS = 2 * 60 * 60 * 1000;
+const tg = window.Telegram.WebApp; try { tg.expand(); } catch(e) {}
+
+let currentUser = null;
+let userBalance = 0;
+let activeTrades = [];
+let historyLogs = [];
+let supportTickets = [];
+let activeWithdrawMethod = '';
+
+const defaultAvatars = [
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&auto=format&fit=crop&q=80",
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop&q=80"
+];
+
+function togglePassword(id, btn){
+  const i=document.getElementById(id); if(!i) return;
+  if(i.type==='password'){i.type='text';btn.textContent='🙈';btn.style.color='var(--gold-2)';}
+  else{i.type='password';btn.textContent='👁️';btn.style.color='var(--text-dim)';}
+}
+
+function renderGatewayCards(){
+  const c=document.getElementById('gatewayGrid8'); if(!c)return;
+  c.innerHTML=PAYMENT_GATEWAYS.map(g=>`
+    <div class="gw8-card ${g.key===selectedGatewayKey?'active':''}" data-gw="${g.key}" onclick="selectGateway('${g.key}')">
+      <span class="gw8-check">✓</span>
+      <span class="gw8-badge">+3%</span>
+      <span class="gw8-icon">${g.icon}</span>
+      <div class="gw8-name">${g.name}</div>
+    </div>`).join('');
+}
+function selectGateway(key){selectedGatewayKey=key;document.querySelectorAll('.gw8-card').forEach(el=>el.classList.toggle('active',el.dataset.gw===key));}
+
+setInterval(()=>{
+  const b=document.getElementById('t-btc'),e=document.getElementById('t-eth'),g=document.getElementById('t-gold');
+  if(b)b.innerText=`$${(64500+Math.random()*500).toFixed(2)} (+2.4%)`;
+  if(e)e.innerText=`$${(3440+Math.random()*30).toFixed(2)} (+1.8%)`;
+  if(g)g.innerText=`$${(2410+Math.random()*10).toFixed(2)} (+0.9%)`;
+},4000);
+
+const baseNames=["Rahul","Amit","Vikram","Deepak","Sandeep","Rohit","Manish","Priya","Neha","Karan"];
+const actions=["earned ₹590 from Pool #1","earned ₹790 from Pool #2","earned ₹1,199 from Pool #3","successfully withdrawn ₹1,250","successfully withdrawn ₹4,500"];
+setInterval(()=>{
+  const n=baseNames[Math.floor(Math.random()*baseNames.length)];
+  const num=Math.floor(Math.random()*8999+1000);
+  const a=actions[Math.floor(Math.random()*actions.length)];
+  const el=document.getElementById('liveTickerText');
+  if(el)el.innerHTML=`🔥 User @${n.toLowerCase()}_${num} ${a} &nbsp;|&nbsp; ⚡ Apex Institutional Desk Active 24/7`;
+},6000);
+
+// ===== PLANS AS YOU TOLD =====
+const plans=[
+  {inv:59,ret:590},
+  {inv:69,ret:790},
+  {inv:100,ret:1199},
+  {inv:200,ret:2000}
+];
+function renderPlans(){
+  const c=document.getElementById('plansContainer'); if(!c)return;
+  c.innerHTML=plans.map((p,i)=>`
+    <div class="plan-card">
+      <div class="tag-badge">Pool #${i+1}</div>
+      <div class="p-inv">Investment: ₹${p.inv.toLocaleString()}</div>
+      <div class="p-ret">₹${p.ret.toLocaleString()}</div>
+      <div class="p-time">⏱️ 10 Mins · ${(p.ret/p.inv).toFixed(1)}X</div>
+      <button class="btn-invest" onclick="confirmDeployPool(${p.inv},${p.ret})">Deploy Pool</button>
+    </div>`).join('');
+}
+
+window.onload=function(){
+  renderPlans(); calculateRoi(); renderGatewayCards();
+  const su=localStorage.getItem('apex_user');
+  if(su){currentUser=JSON.parse(su);loadUserDataForCurrentAccount();goTo('page-home');}
+  else{goTo('page-landing');}
+  startAutoSync();
+};
+
+function hashCode(s){let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}return h;}
+function showLoader(txt,cb){const l=document.getElementById('global-loader');document.getElementById('loader-text').innerText=txt;l.style.display='flex';setTimeout(()=>{l.style.display='none';if(cb)cb();},500);}
+function showNoticeModal(title,msg){document.getElementById('modal-content-area').innerHTML=`<div class="modal-title">${title}</div><div class="modal-msg">${msg}</div><button class="modal-btn" onclick="closeModal()">OK</button>`;document.getElementById('custom-modal').style.display='flex';}
+function closeModal(){document.getElementById('custom-modal').style.display='none';}
+function calculateRoi(){
+  const a=parseInt(document.getElementById('calc-amt').value);
+  const f=parseInt(document.getElementById('calc-freq').value);
+  const returns={59:590,69:790,100:1199,200:2000};
+  const perPool=returns[a]||a*10;
+  document.getElementById('calc-output').innerText=`₹${(perPool*f).toLocaleString()}`;
+}
+
+function goTo(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active-page'));
+  const t=document.getElementById(id); if(t) t.classList.add('active-page');
+  window.scrollTo(0,0);
+  if(currentUser) localStorage.setItem('apex_last_page',id);
+  if(id==='page-about') updateAboutPageData();
+  if(id==='page-tickets') renderTickets();
+  if(id==='page-deposit') renderGatewayCards();
+  if(id==='page-deposit-history') renderDepositHistory();
+  if(id==='page-withdraw-history') renderWithdrawHistory();
+  const tabs=['page-home','page-deposit-history','page-withdraw-history','page-profile'];
+  document.getElementById('bottomNav').style.display=tabs.includes(id)?'flex':'none';
+  if(tabs.includes(id)){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    const i=['page-home','page-deposit-history','page-withdraw-history','page-profile'].indexOf(id);
+    if(i>=0) document.querySelectorAll('.tab-btn')[i].classList.add('active');
+  }
+  renderTrades();
+}
+
+function handleSignup(){
+  const name=document.getElementById('reg-name').value.trim();
+  const phone=document.getElementById('reg-phone').value.trim();
+  const email=document.getElementById('reg-email').value.trim().toLowerCase();
+  const pass=document.getElementById('reg-pass').value.trim();
+  if(!name||!phone||!email||!pass){showNoticeModal("Missing","Fill all fields.");return;}
+  if(phone.length!==10){showNoticeModal("Invalid Mobile","Enter 10-digit mobile.");return;}
+  if(!email.includes('@')){showNoticeModal("Invalid Email","Enter valid email.");return;}
+  if(pass.length<6){showNoticeModal("Weak Password","Min 6 characters.");return;}
+  let users=JSON.parse(localStorage.getItem('apex_users_db')||'{}');
+  if(users[email]){showNoticeModal("Already Registered","Please sign in.");return;}
+  showLoader("Creating...",()=>{
+    users[email]={name,pass}; localStorage.setItem('apex_users_db',JSON.stringify(users));
+    localStorage.setItem('apex_phone_'+email,phone);
+    currentUser={email,name}; localStorage.setItem('apex_user',JSON.stringify(currentUser));
+    const k='_'+email.replace(/[^a-z0-9]/g,'_');
+    localStorage.setItem('apex_bal'+k,'0');
+    localStorage.setItem('apex_hist'+k,JSON.stringify([{id:'WELCOME',title:'Account Registration',desc:'Success',amount:'+₹0',type:'deposit',time:new Date().toLocaleTimeString()}]));
+    loadUserDataForCurrentAccount();
+    showNoticeModal("Welcome","Account created successfully!");
+    setTimeout(()=>goTo('page-home'),1200);
+  });
+}
+
+function handleLogin(){
+  const id=document.getElementById('login-id').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value.trim();
+  if(!id||!pass){showNoticeModal("Missing","Enter credentials.");return;}
+  showLoader("Authenticating...",()=>{
+    if(id==='admin'&&pass==='admin123'){currentUser={email:'admin',name:'Admin'};localStorage.setItem('apex_user',JSON.stringify(currentUser));goTo('page-home');return;}
+    let users=JSON.parse(localStorage.getItem('apex_users_db')||'{}');
+    let found=id;
+    if(!users[id]){ for(let m in users){ if(localStorage.getItem('apex_phone_'+m)===id){found=m;break;} } }
+    if(users[found]&&users[found].pass===pass){
+      currentUser={email:found,name:users[found].name}; localStorage.setItem('apex_user',JSON.stringify(currentUser));
+      loadUserDataForCurrentAccount(); goTo('page-home');
+    } else showNoticeModal("Login Failed","Invalid credentials.");
+  });
+}
+
+function loadUserDataForCurrentAccount(){
+  if(!currentUser) return;
+  const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  userBalance=parseFloat(localStorage.getItem('apex_bal'+k)||'0');
+  historyLogs=JSON.parse(localStorage.getItem('apex_hist'+k)||'[]');
+  activeTrades=JSON.parse(localStorage.getItem('apex_trades'+k)||'[]');
+  supportTickets=JSON.parse(localStorage.getItem('apex_tickets'+k)||'[]');
+  const cn=currentUser.name?currentUser.name.toUpperCase():'MEMBER';
+  document.getElementById('profileNameDisplay').innerHTML=`${cn} <span class="vip-badge-pill" id="vipTierBadge">⭐ VIP2</span>`;
+  let uid=localStorage.getItem('apex_uid'+k);
+  if(!uid){uid=Math.abs(hashCode(currentUser.email))%9000000+1000000;localStorage.setItem('apex_uid'+k,uid);}
+  document.getElementById('profileUidDisplay').innerText=uid;
+  let av=localStorage.getItem('apex_avatar'+k);
+  if(!av){av=defaultAvatars[Math.abs(hashCode(currentUser.email))%defaultAvatars.length];localStorage.setItem('apex_avatar'+k,av);}
+  document.getElementById('profileAvatarImg').src=av;
+  let lt=localStorage.getItem('apex_logintime_persist'+k);
+  if(!lt){const n=new Date();lt=`${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,'0')}-${String(n.getDate()).padStart(2,'0')} ${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;localStorage.setItem('apex_logintime_persist'+k,lt);}
+  document.getElementById('lastLoginTime').innerText=lt;
+  const b=JSON.parse(localStorage.getItem('apex_bank_profile'+k)||'{}');
+  if(b.holder)document.getElementById('bank-holder-name').value=b.holder;
+  if(b.bank)document.getElementById('bank-name-select').value=b.bank;
+  if(b.acc)document.getElementById('bank-acc-no').value=b.acc;
+  if(b.ifsc)document.getElementById('bank-ifsc').value=b.ifsc;
+  syncAllTimestamps(); updateVipTierUI(); updateAboutPageData(); renderTickets(); updateWalletUI();
+}
+
+function saveUserData(){
+  if(!currentUser) return;
+  const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  localStorage.setItem('apex_bal'+k,userBalance);
+  localStorage.setItem('apex_hist'+k,JSON.stringify(historyLogs));
+  localStorage.setItem('apex_trades'+k,JSON.stringify(activeTrades));
+  localStorage.setItem('apex_tickets'+k,JSON.stringify(supportTickets));
+  updateVipTierUI(); updateAboutPageData(); updateWalletUI();
+}
+
+function updateWalletUI(){
+  const v=Number(userBalance)||0, f='₹'+v.toFixed(2);
+  const n=document.getElementById('nav-wallet-bal'), h=document.getElementById('home-wallet-bal'), m=document.getElementById('dep-balance-mini');
+  if(n)n.innerText=f; if(h)h.innerText=f; if(m)m.innerText=v.toFixed(2);
+}
+
+function updateVipTierUI(){
+  const d=historyLogs.filter(h=>h.type==='deposit'&&h.desc==='Success').reduce((s,h)=>s+parseInt(h.amount.replace(/[^0-9]/g,'')||0),0);
+  const el=document.getElementById('vipTierBadge'); if(!el)return;
+  if(d>=50000)el.innerText='🌟 VIP3'; else if(d>=10000)el.innerText='⭐ VIP2'; else el.innerText='🥉 VIP1';
+}
+
+function updateAboutPageData(){
+  if(!currentUser)return;
+  const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  document.getElementById('about-name').innerText=currentUser.name||'N/A';
+  document.getElementById('about-email').innerText=currentUser.email||'N/A';
+  document.getElementById('about-phone').innerText='+91 '+(localStorage.getItem('apex_phone_'+currentUser.email)||'Not Linked');
+  document.getElementById('about-logintime').innerText=localStorage.getItem('apex_logintime_persist'+k)||'---';
+  document.getElementById('about-total-tx').innerText=historyLogs.length;
+  const dep=historyLogs.filter(h=>h.type==='deposit'&&h.desc==='Success').reduce((s,h)=>s+parseInt(h.amount.replace(/[^0-9]/g,'')||0),0);
+  const wd=historyLogs.filter(h=>h.type==='withdraw'&&h.desc==='Success').reduce((s,h)=>s+parseInt(h.amount.replace(/[^0-9]/g,'')||0),0);
+  document.getElementById('about-total-dep').innerText='₹'+dep;
+  document.getElementById('about-total-wdr').innerText='₹'+wd;
+  document.getElementById('about-total-pools').innerText=JSON.parse(localStorage.getItem('apex_trades'+k)||'[]').length;
+}
+
+function syncAllTimestamps(){
+  if(!currentUser)return;
+  const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  const now=Date.now();
+  let pending=JSON.parse(localStorage.getItem('apex_pending'+k)||'[]');
+  let rem=[];
+  pending.forEach(dep=>{
+    if(dep.processed)return;
+    if(now>=dep.targetTime){
+      dep.processed=true;
+      const log=historyLogs.find(h=>h.id===dep.logId);
+      if(log){log.desc='Success';log.title=`Deposit (₹${dep.amt})`;}
+      else historyLogs.unshift({id:dep.logId,title:`Deposit (₹${dep.amt})`,desc:'Success',amount:'+₹'+dep.amt,type:'deposit',time:new Date().toLocaleTimeString()});
+      userBalance+=dep.amt;
+    } else rem.push(dep);
+  });
+  localStorage.setItem('apex_pending'+k,JSON.stringify(rem));
+  let pendingWdr=JSON.parse(localStorage.getItem('apex_pending_wdr'+k)||'[]');
+  let remWdr=[];
+  pendingWdr.forEach(w=>{
+    if(w.processed)return;
+    if(now>=w.targetTime){ w.processed=true; const l=historyLogs.find(h=>h.id===w.logId); if(l)l.desc='Success'; }
+    else remWdr.push(w);
+  });
+  localStorage.setItem('apex_pending_wdr'+k,JSON.stringify(remWdr));
+  let list=JSON.parse(localStorage.getItem('apex_trades'+k)||'[]');
+  list.forEach(t=>{
+    if(t.status==='Running'&&now>=t.targetTime){
+      t.status='Completed';
+      const lid='LOG_RET_'+t.id;
+      if(!historyLogs.some(h=>h.id===lid)){
+        userBalance+=t.ret;  // ONLY total return credited (principal already deducted)
+        historyLogs.unshift({id:lid,title:`Pool Return (${t.id})`,desc:'Success',amount:'+₹'+t.ret,type:'deposit',time:new Date(t.targetTime).toLocaleTimeString()});
+      }
+    }
+  });
+  activeTrades=list; saveUserData(); updateWalletUI();
+}
+
+function startAutoSync(){
+  setInterval(()=>{
+    if(!currentUser)return;
+    syncAllTimestamps();
+    if(document.getElementById('page-trades').classList.contains('active-page')) renderTrades();
+    if(document.getElementById('page-deposit-history').classList.contains('active-page')) renderDepositHistory();
+    if(document.getElementById('page-withdraw-history').classList.contains('active-page')) renderWithdrawHistory();
+  },5000);
+}
+
+// ============ PROCEED TO PAYMENT ============
+function proceedToPayment(){
+  const amt = parseFloat(document.getElementById('dep-amt').value);
+  if(!amt || amt < 59){ showNoticeModal("Invalid","Minimum deposit ₹59."); return; }
+  const gw = PAYMENT_GATEWAYS.find(g => g.key === selectedGatewayKey);
+  if(!gw){ showNoticeModal("Error","Please select a payment channel."); return; }
+
+  const fakeUpi = generateFakeUpi();
+  const orderNo = 'MP' + new Date().toISOString().slice(0,10).replace(/-/g,'') + Date.now() + Math.floor(Math.random()*100);
+  const look = gw.look;
+
+  pendingPayment = { amt, gateway: gw.name, gatewayKey: gw.key, realUpi: gw.realUpi, fakeUpi, orderNo, look };
+
+  const pg = document.getElementById('page-payment');
+  pg.classList.remove('look-1','look-2','look-3');
+  pg.classList.add('look-' + look);
+
+  const upiUri = 'upi://pay?pa='+gw.realUpi+'&pn=ApexCapital&am='+amt+'&cu=INR&tn='+orderNo;
+
+  if(look === 1){
+    document.getElementById('paymentContentLook1').style.display = 'block';
+    document.getElementById('paymentContentLook2').style.display = 'none';
+    document.getElementById('paymentContentLook3').style.display = 'none';
+    document.getElementById('pay-header-title-l1').innerText = gw.name;
+    document.getElementById('pay-amt-l1').innerText = amt.toFixed(2);
+    document.getElementById('pay-upi-l1').value = fakeUpi;
+    document.getElementById('payment-utr-l1').value = '';
+    document.getElementById('submit-pay-btn-l1').classList.remove('enabled');
+    document.getElementById('submit-pay-btn-l1').textContent = 'Submit (UTR not entered)';
+    const c = document.getElementById('pay-qr-container-l1'); c.innerHTML = '';
+    const img = new Image();
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
+    img.style.cssText='width:220px;height:220px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;';
+    c.appendChild(img);
+    startPayTimer(1);
+  } else if(look === 2){
+    document.getElementById('paymentContentLook1').style.display = 'none';
+    document.getElementById('paymentContentLook2').style.display = 'block';
+    document.getElementById('paymentContentLook3').style.display = 'none';
+    document.getElementById('pay-amt-l2').innerText = amt.toFixed(2);
+    document.getElementById('pay-upi-l2').innerText = fakeUpi;
+    document.getElementById('payment-utr-l2').value = '';
+    document.getElementById('submit-pay-btn-l2').classList.remove('enabled');
+    const c = document.getElementById('pay-qr-container-l2'); c.innerHTML = '';
+    const img = new Image();
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
+    img.style.cssText='width:200px;height:200px;';
+    c.appendChild(img);
+    startPayTimer(2);
+  } else {
+    document.getElementById('paymentContentLook1').style.display = 'none';
+    document.getElementById('paymentContentLook2').style.display = 'none';
+    document.getElementById('paymentContentLook3').style.display = 'block';
+    document.getElementById('pay-header-title-l3').innerText = gw.name + ' · Secure';
+    document.getElementById('pay-amt-l3').innerText = amt.toFixed(2);
+    document.getElementById('pay-upi-l3').innerText = fakeUpi;
+    document.getElementById('payment-utr-l3').value = '';
+    document.getElementById('submit-pay-btn-l3').classList.remove('enabled');
+    document.getElementById('submit-pay-btn-l3').textContent = 'SUBMIT PAYMENT';
+    const c = document.getElementById('pay-qr-container-l3'); c.innerHTML = '';
+    const img = new Image();
+    img.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
+    img.style.cssText='width:220px;height:220px;';
+    c.appendChild(img);
+    startPayTimer(3);
+  }
+
+  goTo('page-payment');
+}
+
+function startPayTimer(look){
+  clearInterval(payTimerInt);
+  let remaining = 15 * 60;
+  const e1 = document.getElementById('pay-timer-l1');
+  const e2 = document.getElementById('pay-timer-l2');
+  const e3 = document.getElementById('pay-timer-l3');
+  const update = () => {
+    const s = formatMmSs(remaining);
+    if(look===1 && e1) e1.textContent = s;
+    if(look===2 && e2) e2.textContent = s;
+    if(look===3 && e3) e3.textContent = s;
+  };
+  update();
+  payTimerInt = setInterval(() => {
+    remaining--;
+    if(remaining <= 0){
+      clearInterval(payTimerInt);
+      update();
+      showNoticeModal("Session Expired", "Payment window closed. Please try again.");
+      cancelPayment();
+      return;
+    }
+    update();
+  }, 1000);
+}
+
+function formatMmSs(s){const m=Math.floor(s/60),sec=s%60;return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+
+function checkUtrFilledL1(){const v=document.getElementById('payment-utr-l1').value.trim();const b=document.getElementById('submit-pay-btn-l1');if(v.length>=12){b.classList.add('enabled');b.textContent='Submit Payment';}else{b.classList.remove('enabled');b.textContent='Submit (UTR not entered)';}}
+function checkUtrFilledL2(){const v=document.getElementById('payment-utr-l2').value.trim();const b=document.getElementById('submit-pay-btn-l2');if(v.length>=12){b.classList.add('enabled');}else{b.classList.remove('enabled');}}
+function checkUtrFilledL3(){const v=document.getElementById('payment-utr-l3').value.trim();const b=document.getElementById('submit-pay-btn-l3');if(v.length>=12){b.classList.add('enabled');b.textContent='SUBMIT PAYMENT';}else{b.classList.remove('enabled');}}
+
+function copyAmount(){if(!pendingPayment)return;navigator.clipboard.writeText(pendingPayment.amt.toFixed(2)).then(()=>showNoticeModal("Copied","Amount copied."));}
+function copyPayUpi(which){
+  if(!pendingPayment)return;
+  const val = pendingPayment.fakeUpi;
+  const doCopy = () => {
+    const ta = document.createElement('textarea');
+    ta.value = val; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); } catch(e){}
+    document.body.removeChild(ta);
+    showNoticeModal("Copied ✓", "UPI ID copied:<br><b style='color:var(--gold-2);font-family:monospace;'>" + val + "</b>");
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(val).then(()=>{
+      showNoticeModal("Copied ✓", "UPI ID copied:<br><b style='color:var(--gold-2);font-family:monospace;'>" + val + "</b>");
+    }).catch(doCopy);
+  } else doCopy();
+}
+
+function pasteUtr(which){
+  const targetId = which === 'l1' ? 'payment-utr-l1' : (which === 'l2' ? 'payment-utr-l2' : 'payment-utr-l3');
+  const checkFn = which === 'l1' ? checkUtrFilledL1 : (which === 'l2' ? checkUtrFilledL2 : checkUtrFilledL3);
+  if(navigator.clipboard && navigator.clipboard.readText){
+    navigator.clipboard.readText().then(txt=>{
+      const d=(txt||'').replace(/[^0-9a-zA-Z]/g,'').slice(0,32);
+      if(d.length>0){document.getElementById(targetId).value=d;checkFn();}
+    }).catch(()=>{
+      const m=prompt('Paste UTR:');
+      if(m){const d=m.replace(/[^0-9a-zA-Z]/g,'').slice(0,32);document.getElementById(targetId).value=d;checkFn();}
+    });
+  } else {
+    const m=prompt('Paste UTR:');
+    if(m){const d=m.replace(/[^0-9a-zA-Z]/g,'').slice(0,32);document.getElementById(targetId).value=d;checkFn();}
+  }
+}
+
+// ============ OPEN UPI APP (Deep Link) ============
+function openUpiApp(app){
+  if(!pendingPayment){ showNoticeModal("Error","Session expired."); return; }
+  const amt = pendingPayment.amt.toFixed(2);
+  const tn = encodeURIComponent('Payment to ApexCapital');
+  const pn = encodeURIComponent('ApexCapital');
+  const pa = pendingPayment.realUpi; // 🔒 Real UPI hidden in deep link
+
+  // Standard UPI URI
+  const upiUri = `upi://pay?pa=${pa}&pn=${pn}&am=${amt}&cu=INR&tn=${tn}`;
+
+  let appUri = upiUri;
+  if(app === 'phonepe') appUri = `phonepe://pay?pa=${pa}&pn=${pn}&am=${amt}&cu=INR&tn=${tn}`;
+  else if(app === 'paytm') appUri = `paytmmp://pay?pa=${pa}&pn=${pn}&am=${amt}&cu=INR&tn=${tn}`;
+  else if(app === 'gpay') appUri = `tez://upi/pay?pa=${pa}&pn=${pn}&am=${amt}&cu=INR&tn=${tn}`;
+  else if(app === 'bhim') appUri = `bhim://pay?pa=${pa}&pn=${pn}&am=${amt}&cu=INR&tn=${tn}`;
+
+  // Try to open the app, fallback to generic UPI
+  const start = Date.now();
+  const t = setTimeout(() => {
+    if(Date.now() - start < 2000){
+      // Fallback — generic UPI opens app chooser
+      window.location.href = upiUri;
+    }
+  }, 1200);
+  window.location.href = appUri;
+  setTimeout(() => clearTimeout(t), 2500);
+}
+
+function cancelPayment(){clearInterval(payTimerInt);pendingPayment=null;goTo('page-deposit');}
+
+function submitPaymentL1(){if(!pendingPayment){showNoticeModal("Error","Session expired.");return;}const utr=document.getElementById('payment-utr-l1').value.trim();if(utr.length<12){showNoticeModal("Invalid UTR","Enter at least 12 digits.");return;}finalizeSubmit(utr);}
+function submitPaymentL2(){if(!pendingPayment){showNoticeModal("Error","Session expired.");return;}const utr=document.getElementById('payment-utr-l2').value.trim();if(utr.length<12){showNoticeModal("Invalid UTR","Enter at least 12 digits.");return;}finalizeSubmit(utr);}
+function submitPaymentL3(){if(!pendingPayment){showNoticeModal("Error","Session expired.");return;}const utr=document.getElementById('payment-utr-l3').value.trim();if(utr.length<12){showNoticeModal("Invalid UTR","Enter at least 12 digits.");return;}finalizeSubmit(utr);}
+
+function finalizeSubmit(utr){
+  const { amt, gateway, orderNo } = pendingPayment;
+  showLoader("Submitting...", () => {
+    const logId = 'DEP_' + utr;
+    const k = '_' + currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+    if(!historyLogs.some(h => h.id === logId)){
+      historyLogs.unshift({id:logId,title:`Deposit via ${gateway} (UTR: ${utr})`,desc:'Pending UTR',amount:'+₹'+amt,type:'deposit',time:new Date().toLocaleTimeString()});
+      let pending = JSON.parse(localStorage.getItem('apex_pending'+k) || '[]');
+      pending.push({ logId, amt, targetTime: Date.now() + DEPOSIT_AUTO_CREDIT_MS, processed: false });
+      localStorage.setItem('apex_pending'+k, JSON.stringify(pending));
+      saveUserData();
+    }
+    fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify({type:'DEPOSIT',email:currentUser.email,name:currentUser.name,amount:amt,utr:utr,gateway:gateway,order_no:orderNo})}).catch(()=>{});
+    clearInterval(payTimerInt);
+    pendingPayment = null;
+    showNoticeModal("UTR Submitted", `Deposit of ₹${amt} via ${gateway} is being verified. Balance will auto-credit within 10 minutes.`);
+    goTo('page-deposit-history');
+  });
+}
+
+function handleDirectWithdrawClick(){
+  if(!currentUser) return;
+  const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+  const b=JSON.parse(localStorage.getItem('apex_bank_profile'+k)||'{}');
+  if(!b.acc || b.acc.length<4){showNoticeModal("Info Missing","Add Bank first.");goTo('page-profile');return;}
+  activeWithdrawMethod='Bank';
+  document.getElementById('withdrawPageTitle').innerText="Withdraw to Bank";
+  document.getElementById('active-payout-info').innerHTML=`🏦 Payout: <b>${b.bank||'Bank'} (A/C ****${b.acc.slice(-4)})</b>`;
+  goTo('page-withdraw');
+}
+
+function executeWithdrawal(){
+  const amt=parseFloat(document.getElementById('w-amt').value);
+  if(isNaN(amt)||amt<400){showNoticeModal("Error","Minimum ₹400.");return;}
+  if(amt>userBalance){showNoticeModal("Insufficient","Exceeds balance.");return;}
+  showLoader("Processing...",()=>{
+    setTimeout(()=>{
+      userBalance-=amt;
+      const id='WDR_'+Math.floor(Math.random()*900000+100000);
+      const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');
+      historyLogs.unshift({id,title:`Withdrawal (${activeWithdrawMethod})`,desc:'Processing',amount:'-₹'+amt,type:'withdraw',time:new Date().toLocaleTimeString()});
+      let pw=JSON.parse(localStorage.getItem('apex_pending_wdr'+k)||'[]');
+      pw.push({logId:id,targetTime:Date.now()+WITHDRAW_AUTO_SUCCESS_MS,processed:false,amt});
+      localStorage.setItem('apex_pending_wdr'+k,JSON.stringify(pw));
+      saveUserData();
+      showNoticeModal("Withdrawal Submitted",`₹${amt} will auto-transfer within 2 hours.`);
+      goTo('page-withdraw-history');
+    },1000);
+  });
+}
+
+function confirmDeployPool(inv,ret){
+  if(userBalance<inv){showNoticeModal("Insufficient Funds",`You need ₹${inv}.`);return;}
+  document.getElementById('modal-content-area').innerHTML=`<div class="modal-title">Confirm Pool</div><div class="modal-msg">Deploy <b>₹${inv}</b><br>⏱️ 10 Min Lock<br>💰 Total Return: <b>₹${ret}</b></div><button class="modal-btn" onclick="executeDeployPool(${inv},${ret})">Confirm</button>`;
+  document.getElementById('custom-modal').style.display='flex';
+}
+function executeDeployPool(inv,ret){
+  closeModal();
+  showLoader("Initializing...",()=>{
+    userBalance-=inv;
+    const id='POOL_'+Math.floor(Math.random()*900000+100000);
+    const tt=Date.now()+10*60*1000;
+    activeTrades.unshift({id,inv,ret,targetTime:tt,status:'Running'});
+    historyLogs.unshift({id:'LOG_'+id,title:`Pool Deployment (${id})`,desc:'Running',amount:'-₹'+inv,type:'deposit',time:new Date().toLocaleTimeString()});
+    saveUserData(); goTo('page-trades');
+  });
+}
+function renderTrades(){
+  const c=document.getElementById('tradesListContainer'); if(!c)return;
+  syncAllTimestamps();
+  if(activeTrades.length===0){c.innerHTML=`<div class="empty-msg">No active trades running.</div>`;return;}
+  c.innerHTML=activeTrades.map(t=>{
+    const left=Math.max(0,Math.floor((t.targetTime-Date.now())/1000));
+    const m=Math.floor(left/60),s=left%60;
+    const ts=t.status==='Running'?`⏳ Time Left: ${m}m ${s}s`:`✅ Completed`;
+    return `<div class="list-card" style="flex-direction:column;align-items:flex-start;gap:8px;"><div style="display:flex;justify-content:space-between;width:100%;"><strong style="font-size:13px;color:var(--gold-2);">Pool: ${t.id}</strong><span class="status-${t.status==='Running'?'running':'completed'}" style="font-size:11px;">${t.status}</span></div><div style="font-size:12px;color:var(--text-mid);">Invested: <b style="color:#fff;">₹${t.inv}</b> | Total Return: <b style="color:var(--gold-2);">₹${t.ret}</b></div><div style="font-size:11px;font-weight:700;background:var(--surface-2);padding:6px 10px;border-radius:8px;width:100%;">${ts}</div></div>`;
+  }).join('');
+}
+
+function renderDepositHistory(){
+  const c=document.getElementById('depositHistoryContainer'); if(!c)return;
+  syncAllTimestamps();
+  const list = historyLogs.filter(h => h.type === 'deposit' || h.title.includes('Deposit') || h.title.includes('Pool'));
+  if(list.length===0){c.innerHTML=`<div class="empty-msg">No deposit history yet.</div>`;return;}
+  c.innerHTML=list.map(h=>{
+    let sc='status-success';
+    if(h.desc==='Pending UTR'||h.desc==='Processing'||h.desc==='Running')sc='status-processing';
+    return `<div class="list-card"><div><div style="font-size:13px;font-weight:900;color:#fff;">${h.title}</div><div style="font-size:10px;color:var(--text-dim);font-weight:700;margin-top:2px;">${h.time}</div></div><div style="text-align:right;"><div style="font-size:13px;font-weight:900;color:${h.amount.startsWith('+')?'var(--emerald-2)':'var(--gold-2)'};">${h.amount}</div><div class="${sc}" style="font-size:10px;">${h.desc}</div></div></div>`;
+  }).join('');
+}
+
+function renderWithdrawHistory(){
+  const c=document.getElementById('withdrawHistoryContainer'); if(!c)return;
+  syncAllTimestamps();
+  const list = historyLogs.filter(h => h.type === 'withdraw' || h.title.includes('Withdrawal'));
+  if(list.length===0){c.innerHTML=`<div class="empty-msg">No withdraw history yet.</div>`;return;}
+  c.innerHTML=list.map(h=>{
+    let sc='status-success';
+    if(h.desc==='Processing')sc='status-processing';
+    return `<div class="list-card"><div><div style="font-size:13px;font-weight:900;color:#fff;">${h.title}</div><div style="font-size:10px;color:var(--text-dim);font-weight:700;margin-top:2px;">${h.time}</div></div><div style="text-align:right;"><div style="font-size:13px;font-weight:900;color:var(--danger);">${h.amount}</div><div class="${sc}" style="font-size:10px;">${h.desc}</div></div></div>`;
+  }).join('');
+}
+
+function openNameModal(){document.getElementById('modal-content-area').innerHTML=`<div class="modal-title">Change Name</div><div class="field" style="margin-top:10px;"><input type="text" id="new-name-input" value="${currentUser.name}"></div><button class="modal-btn" style="margin-top:10px;" onclick="saveNewName()">Update</button>`;document.getElementById('custom-modal').style.display='flex';}
+function saveNewName(){const n=document.getElementById('new-name-input').value.trim();if(!n)return;currentUser.name=n;localStorage.setItem('apex_user',JSON.stringify(currentUser));let u=JSON.parse(localStorage.getItem('apex_users_db')||'{}');if(u[currentUser.email]){u[currentUser.email].name=n;localStorage.setItem('apex_users_db',JSON.stringify(u));}closeModal();loadUserDataForCurrentAccount();showNoticeModal("Success","Name updated.");}
+function openPasswordModal(){document.getElementById('modal-content-area').innerHTML=`<div class="modal-title">Change Password</div><div class="field" style="margin-top:10px;"><div class="pass-wrap"><input type="password" id="new-pass-input" placeholder="New (6+)" style="padding-right:48px;"><button type="button" class="eye-btn" onclick="togglePassword('new-pass-input', this)">👁️</button></div></div><button class="modal-btn" style="margin-top:10px;" onclick="saveNewPassword()">Update</button>`;document.getElementById('custom-modal').style.display='flex';}
+function saveNewPassword(){const p=document.getElementById('new-pass-input').value.trim();if(!p||p.length<6){showNoticeModal("Error","6+ chars required.");return;}let u=JSON.parse(localStorage.getItem('apex_users_db')||'{}');if(u[currentUser.email]){u[currentUser.email].pass=p;localStorage.setItem('apex_users_db',JSON.stringify(u));}closeModal();showNoticeModal("Success","Password updated.");}
+function saveBankDetailsSecurely(){const h=document.getElementById('bank-holder-name').value.trim();const b=document.getElementById('bank-name-select').value;const a=document.getElementById('bank-acc-no').value.trim();const i=document.getElementById('bank-ifsc').value.trim().toUpperCase();if(!h||!b||!a||!i){showNoticeModal("Missing","Fill all bank fields.");return;}showLoader("Saving...",()=>{const k='_'+currentUser.email.toLowerCase().replace(/[^a-z0-9]/g,'_');localStorage.setItem('apex_bank_profile'+k,JSON.stringify({holder:h,bank:b,acc:a,ifsc:i}));showNoticeModal("Success","Bank profile saved.");goTo('page-profile');});}
+function triggerBiometricScan(){const n=document.getElementById('kyc-fullname').value.trim();const p=document.getElementById('kyc-pan').value.trim().toUpperCase();const a=document.getElementById('kyc-aadhaar').value.trim();const d=document.getElementById('kyc-dob').value;if(!n||!p||!a||!d){showNoticeModal("Missing","Fill all KYC fields.");return;}if(p.length!==10){showNoticeModal("Invalid PAN","PAN must be 10 chars.");return;}showLoader("Verifying KYC...",()=>{setTimeout(()=>{showNoticeModal("KYC Verified","Documents approved!");document.getElementById('kyc-badge').innerText='✅ Verified';goTo('page-profile');},1200);});}
+function submitSupportTicket(){const cat=document.getElementById('ticket-category').value;const ref=document.getElementById('ticket-ref').value.trim();const desc=document.getElementById('ticket-desc').value.trim();if(!ref||!desc){showNoticeModal("Missing","Enter UTR & issue.");return;}const id='TCK_'+Math.floor(Math.random()*900000+100000);supportTickets.unshift({id,category:cat,ref,desc,status:'Pending Review',time:new Date().toLocaleString()});saveUserData();showNoticeModal("Ticket Submitted",`${id} raised.`);document.getElementById('ticket-ref').value='';document.getElementById('ticket-desc').value='';renderTickets();}
+function renderTickets(){const c=document.getElementById('ticketsListContainer');if(!c)return;if(supportTickets.length===0){c.innerHTML=`<div class="empty-msg">No tickets yet.</div>`;return;}c.innerHTML=supportTickets.map(t=>`<div class="list-card" style="margin-bottom:10px;flex-direction:column;align-items:flex-start;gap:6px;"><div style="display:flex;justify-content:space-between;width:100%;"><strong style="font-size:12px;color:var(--gold-2);">${t.id} · ${t.category}</strong><span style="font-size:10px;font-weight:800;color:#d97706;">${t.status}</span></div><div style="font-size:11px;color:var(--text-mid);">Ref: <b style="color:#fff;">${t.ref}</b></div><div style="font-size:11px;color:var(--text-mid);">${t.desc}</div></div>`).join('');}
+function shareReferralLink(){const uid=document.getElementById('profileUidDisplay').innerText;const l=`https://t.me/ApexCapitalBot/app?start=ref_${uid}`;if(navigator.clipboard){navigator.clipboard.writeText(l).then(()=>showNoticeModal("Link Copied",l));}else showNoticeModal("Referral Link",l);}
+function sendAiMsg(){const i=document.getElementById('chatInput'),t=i.value.trim();if(!t)return;const b=document.getElementById('chatBody');b.innerHTML+=`<div class="bubble b-usr">${t}</div>`;i.value='';b.scrollTop=b.scrollHeight;setTimeout(()=>{let r="I can assist with deposits, pools, withdrawals.";const l=t.toLowerCase();if(l.includes('deposit')||l.includes('utr'))r="Go to Deposit, choose gateway, enter amount, click Deposit, scan QR, paste UTR, submit. Auto-credits in 10 min.";else if(l.includes('withdraw'))r="Withdrawals auto-process within 2 hours. Min ₹400, zero fees.";else if(l.includes('pool')||l.includes('return'))r="High-Yield Pools give up to 12X total return in 10 minutes. Max 5 pools/day.";b.innerHTML+=`<div class="bubble b-bot">${r}</div>`;b.scrollTop=b.scrollHeight;},600);}
+function logoutUser(){localStorage.removeItem('apex_user');currentUser=null;goTo('page-login');}
+</script>
+</body>
+</html>
